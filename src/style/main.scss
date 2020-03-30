@@ -1,0 +1,16 @@
+@import 'reset';
+@import 'varieble';
+
+body {
+    background-color: $background-color;
+}
+
+.icons {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.v-list-item {
+    padding: 0;
+}

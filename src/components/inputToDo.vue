@@ -1,62 +1,36 @@
 <template>
-  <div class="mb-3" transition="fade-transition">
+  <div class="mb-3">
     <v-form>
-      <v-row
-        class="align-items-baseline">
-        <v-col
-          cols="9">
-          <v-text-field
-            label="Task"
-            hide-details="auto"
+      <v-row class="align-items-baseline position-relative">
+        <v-col :cols="activeInput ? 9 : 12">
+          <v-text-field label="Add new task"
+            v-model="text"
+            aria-autocomplete="false"
             @keydown.prevent.enter="inputFunction"
-            v-model="item"
-            @keydown="active = item.length >= 0"></v-text-field>
+            @keyup="activeInput = text.length > 0"></v-text-field>
         </v-col>
-        <v-col
-          v-show="active"
-          width='100'
-          cols='3'
-          class="align-items-center align-end text-right">
-          <span
-            text
-            small
-            @click.prevent="inputFunction">
-            <v-icon color="#000" class="icons" >mdi-plus</v-icon></span>
-          <span
-            text
-            small
-            color="error"
-            @click.prevent="clearInput">
-            <v-icon color="#000" class="icons" >mdi-close</v-icon></span>
-        </v-col>
+        <div :class="[activeInput ? 'animation' : 'animation-back' ]" v-show="activeInput">
+          <v-btn text x-small class="p0" @click.prevent="inputFunction">
+            <v-icon color="#000" class="icons">mdi-plus</v-icon>
+          </v-btn>
+          <v-btn text x-small color="error" @click.prevent="clearInput">
+            <v-icon color="#000" class="icons">mdi-close</v-icon>
+          </v-btn>
+        </div>
       </v-row>
       <v-expand-transition>
-        <div
-          v-show="active"
-          height="100">
-          <v-row>
+        <div v-show="activeInput" height="100">
+          <v-row v-show="text.length">
             <v-col>
-              <span v-show="activeTips.length">
-                <v-btn
-                v-for="item in activeTips" :key="item"
-                @click="activeTips.splice(activeTips.indexOf(item), 1)"
-                depressed
-                rounded
-                dark
-                x-small>{{ item }}</v-btn>
-              </span>
-            </v-col>
-          </v-row>
-          <v-row v-show="item.length">
-            <v-col>
+              <p class="mr-3 d-inline-block">Marker: </p>
               <v-expand-transition
-                v-for="item in $store.state.tips" :key="item.name">
+                v-for="marker in markersList" :key="marker.id">
                 <v-btn
-                  @click="addToActiveTips(item.name)"
-                  v-show="activeTips.indexOf(item.name) < 0"
-                  :color="item.color"
-                  x-small
-                  text>{{ item.name }}</v-btn>
+                  @click="addToActiveTips(marker)"
+                  :class="markerColor(marker)"
+                  rounded
+                  depressed
+                  x-small>{{ marker }}</v-btn>
               </v-expand-transition>
             </v-col>
           </v-row>
@@ -71,29 +45,43 @@ export default {
   name: 'todoinput',
   data () {
     return {
-      item: '',
-      activeTips: [],
-      active: false
+      text: '',
+      activeMarkers: [],
+      activeInput: false
+    }
+  },
+  computed: {
+    colors () {
+      return this.$store.getters.colorsList
+    },
+    markersList () {
+      return this.$store.getters.markersList
     }
   },
   methods: {
     inputFunction () {
-      if (this.item.length > 0) {
+      if (this.text.length > 0) {
         const date = Date.now()
-        this.$store.commit('ADD_LIST', { item: this.item, time: date, tips: this.activeTips })
-        this.item = ''
-        this.activeTips = []
+        this.$store.dispatch('addItem', { text: this.text, time: date, markers: this.activeMarkers })
+        this.clearInput()
       }
     },
-    addToActiveTips (item) {
-      if (this.activeTips.indexOf(item) < 0) {
-        this.activeTips.push(item)
+    addToActiveTips (markerName) {
+      if (this.activeMarkers.includes(markerName)) {
+        this.activeMarkers.splice(this.activeMarkers.indexOf(markerName), 1)
+      } else {
+        this.activeMarkers.push(markerName)
       }
     },
     clearInput () {
-      this.item = ''
-      this.activeTips = []
-      this.focus = false
+      this.text = ''
+      this.activeMarkers = []
+      this.activeInput = false
+    },
+    markerColor (markerName) {
+      if (this.activeMarkers.includes(markerName)) {
+        return 'btn__' + this.colors[markerName]
+      }
     }
   }
 }

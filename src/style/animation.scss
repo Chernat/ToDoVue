@@ -1,0 +1,43 @@
+.col {
+    transition: .3s;
+}
+
+.animation {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 90px;
+    opacity: 1;
+    animation-name: start;
+    animation-duration: .3s;
+    animation-fill-mode: backwards;
+}
+
+.animation-back {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    top: 50%;
+    right: -80px;
+    transform: translateY(-50%);
+    width: 90px;
+    opacity: 0;
+    animation-duration: .3s;
+    animation-fill-mode: backwards;
+    animation-name: start;
+    animation-direction: reverse;
+}
+
+@keyframes start {
+    from {
+        right: -80px;
+        opacity: 0;
+    }
+    to {
+        right: 0;
+        opacity: 1;
+    }
+}

@@ -1,5 +1,5 @@
-@import 'reset';
 @import 'varieble';
+@import 'animation';
 
 body {
     background-color: $background-color;
@@ -13,4 +13,47 @@ body {
 
 .v-list-item {
     padding: 0;
+}
+
+.btn {
+    &__red {
+        background-color: #ffbaba !important;
+        color: #000 !important;
+    }
+    &__yellow {
+        background-color: #f1e7b0 !important;
+        color: #000 !important;
+    }
+    &__blue {
+        background-color: #e4f8f9 !important;
+        color: #000 !important;
+    }
+}
+
+.done {
+    opacity: 0.5;
+    transition: .5s;
+    &-not {
+        opacity: 1;
+        transition: .5s;
+    }
+    & .v-list-item__title {
+        text-decoration: line-through;
+    }
+}
+
+.v-list-item__title {
+    white-space: normal;
+}
+
+.col {
+    transition: .3s;
+}
+
+.d-block {
+    transition: .4s;
+}
+
+.d-none {
+    transition: .4s;
 }

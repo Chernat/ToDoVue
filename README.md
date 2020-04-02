@@ -1,4 +1,4 @@
-# vue-site
+# ToDo Vue + Vuex + Vuetify
 
 ## Project setup
 ```
